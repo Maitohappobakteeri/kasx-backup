@@ -12,7 +12,7 @@ import argparse
 def lue_argumentit():
     parser = argparse.ArgumentParser()
     parser.add_argument("kohde", 
-                        help="polku hakemistolle, johon varmuuskopio tehdään")
+                        help="polku hakemistolle, josta varmuuskopio tuodaan")
     parser.add_argument("-t", "--testi", action="store_true",
                         help="testaa toimintaa, vain tulosta komennot")
     args = parser.parse_args()
@@ -34,8 +34,7 @@ def main():
     oneCopyCommand = "onecopy"
 
     dateFormat = "%Y_%m_%d_%H_%M_%S"
-    currentTime = datetime.datetime.today()
-    dateString = currentTime.strftime(dateFormat)
+    dateString = None
 
     args = lue_argumentit()
     onlyTest = args.testi
@@ -54,19 +53,19 @@ def main():
                 return
             else:
                 print("löytyi molemmat kasx muokkausaikatiedostot")
-                if(backup.read_note_time(os.path.join(backupLocation, lockFilename)) > backup.read_note_time(lockFilename)):
-                    print("varmuuskopion kasx muokkausaikatiedosto on uudempi")
-                    print("synkronoi muutokset viimeisimmästä kopiosta")
+                if(backup.read_note_time(os.path.join(backupLocation, lockFilename)) <= backup.read_note_time(lockFilename)):
+                    print("paikallinen kasx muokkausaikatiedosto on uudempi")
+                    print("selvitä tämä käsin")
                     return
                 else:
                     print("kasx muokkausaikatiedostotojen vertailu onnistui")
         else:
-            print("paikallinen kasx muokkausaikatiedosto puuttuu")
-            print("synkronoi muutokset viimeisimmästä kopiosta")
-            return
+            print("varmuuskopiota ei ole synkronoitu aikaisemmin")
     else:
         print("varmuuskopio kohteesta puuttuu kasx muokkausaikatiedosto")
         return
+
+    dateString = backup.read_note_date(os.path.join(backupLocation, lockFilename))
 
     with open(folderFilePath, "r") as f:
         command = ""
@@ -95,21 +94,21 @@ def main():
                     
     for path in fullCopyList:
         if(onlyTest):
-            print("rsync -a --delete --progress {0} {1}/FullCopy/{2}/".format(path, backupLocation, dateString))
+            print("rsync -a --delete --progress {1}/FullCopy/{2}/{0} {0}".format(path, backupLocation, dateString))
         else:
             raise RuntimeError("oh no");
-            os.system("rsync -a --delete --progress {0} {1}/FullCopy/{2}/".format(path, backupLocation, dateString))
+            os.system("rsync -a --delete --progress {1}/FullCopy/{2}/{0} {0}".format(path, backupLocation, dateString))
         
     for path in oneCopyList:
         if(onlyTest):
-            print("rsync -a --delete --progress {0} {1}/OneCopy/".format(path, backupLocation, dateString))
+            print("rsync -a --delete --progress {1}/OneCopy/{0} {0}".format(path, backupLocation, dateString))
         else:
             raise RuntimeError("oh no");
-            os.system("rsync --delete -a --progress {0} {1}/OneCopy/".format(path, backupLocation, dateString))
+            os.system("rsync --delete -a --progress {1}/OneCopy/{0} {0}".format(path, backupLocation, dateString))
    
     if not onlyTest or True:
-        backup.write_note(os.path.join(backupLocation, lockFilename), dateString)
         backup.write_note(lockFilename, dateString)
-   
+        
+        
 if __name__ == "__main__":
     main()         
