@@ -25,7 +25,7 @@ def main():
     #files on one copy list will overwrite on the last save
     oneCopyList = []
 
-    workDir = os.path.expanduser("~")
+    #workDir = os.path.expanduser("~")
     folderFilePath = ".kasx-backup.config"
     lockFilename = ".kasx-backup-note"
 
@@ -45,7 +45,7 @@ def main():
         print("varmuuskopion polun pitää alkaa /")
         return
 
-    os.chdir(workDir)
+    #os.chdir(workDir)
     if(os.path.isfile(os.path.join(backupLocation, lockFilename))):
         if(os.path.isfile(lockFilename)):
             if(os.path.samefile(os.path.abspath(os.path.join(backupLocation, lockFilename)),
@@ -56,7 +56,10 @@ def main():
                 print("löytyi molemmat kasx muokkausaikatiedostot")
                 if(backup.read_note_time(os.path.join(backupLocation, lockFilename)) > backup.read_note_time(lockFilename)):
                     print("varmuuskopion kasx muokkausaikatiedosto on uudempi")
-                    print("synkronoi muutokset viimeisimmästä kopiosta")
+                    if(backup.read_note_date(os.path.join(backupLocation, lockFilename)) == backup.read_note_date(lockFilename)):
+                        print("^^oikeasti ei uudempi, sama aika!!!")
+                    else:
+                        print("synkronoi muutokset viimeisimmästä kopiosta")
                     return
                 else:
                     print("kasx muokkausaikatiedostotojen vertailu onnistui")
@@ -66,6 +69,10 @@ def main():
             return
     else:
         print("varmuuskopio kohteesta puuttuu kasx muokkausaikatiedosto")
+        return
+
+    if not os.path.isfile(folderFilePath):
+        print("{} ei ole olemassa".format(folderFilePath))
         return
 
     with open(folderFilePath, "r") as f:
@@ -87,6 +94,15 @@ def main():
                 path = line.rstrip("\n")
                 if not path:
                     continue
+                    
+                if not os.path.exists(path):
+                    print("{} doesn't exist".format(path))
+                    return
+                elif os.path.isdir(path):
+                    if not path[-1] == "/":
+                        #path += "/"
+                        pass
+
                 if command == fullCopyCommand:
                     fullCopyList.append(path)
                 elif command == oneCopyCommand:
@@ -95,21 +111,20 @@ def main():
                     
     for path in fullCopyList:
         if(onlyTest):
-            print("rsync -a --delete --progress {0} {1}/FullCopy/{2}/".format(path, backupLocation, dateString))
+            print("rsync -a --delete --progress {0} {1}/full-copy/{2}/".format(path, backupLocation, dateString))
         else:
-            raise RuntimeError("oh no");
-            os.system("rsync -a --delete --progress {0} {1}/FullCopy/{2}/".format(path, backupLocation, dateString))
+            os.system("rsync -a --delete --progress {0} {1}/full-copy/{2}/".format(path, backupLocation, dateString))
         
     for path in oneCopyList:
         if(onlyTest):
-            print("rsync -a --delete --progress {0} {1}/OneCopy/".format(path, backupLocation, dateString))
+            print("rsync -a --delete --progress {0} {1}/one-copy/".format(path, backupLocation, dateString))
         else:
-            raise RuntimeError("oh no");
-            os.system("rsync --delete -a --progress {0} {1}/OneCopy/".format(path, backupLocation, dateString))
+            os.system("rsync --delete -a --progress {0} {1}/one-copy/".format(path, backupLocation, dateString))
    
-    if not onlyTest or True:
-        backup.write_note(os.path.join(backupLocation, lockFilename), dateString)
+    if not onlyTest:
+        backup.write_note(os.path.join(backupLocation, lockFilename), dateString, True)
         backup.write_note(lockFilename, dateString)
+        print("molemmat kasx muokkausaikatiedostot päivitettiin")
    
 if __name__ == "__main__":
     main()         
