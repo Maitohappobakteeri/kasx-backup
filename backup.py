@@ -28,6 +28,11 @@ def read_note_valid_sync(filename):
 
 class Note_:
     def __init__(self, filename):
+        print("Luetaan note: {}".format(filename))
+        if not os.path.exists(filename):
+            print("Virhe: {} ei ole olemassa!".format(filename))
+            raise FileNotFoundError()
+
         with open(filename, "r") as notefile:
             noteDict = json.load(notefile)
 
