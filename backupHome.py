@@ -11,13 +11,15 @@ import argparse
 
 def lue_argumentit():
     parser = argparse.ArgumentParser()
-    parser.add_argument("kohde", 
+    parser.add_argument("kohde",
                         help="polku hakemistolle, johon varmuuskopio tehdään")
     parser.add_argument("-t", "--testi", action="store_true",
                         help="testaa toimintaa, vain tulosta komennot")
+    parser.add_argument("-f", "--vain-tiedostot", action="store_true",
+                        help="aja rsync -n asetuksella")
     args = parser.parse_args()
     return args
-    
+
 
 def main():
     #files on full copy list are backed up without touching the old backup
@@ -39,36 +41,21 @@ def main():
 
     args = lue_argumentit()
     onlyTest = args.testi
+    dryRun = args.vain_tiedostot
     backupLocation = args.kohde
-    
+
     if(not backupLocation[0] == "/"):
         print("varmuuskopion polun pitää alkaa /")
         return
 
     #os.chdir(workDir)
-    if(os.path.isfile(os.path.join(backupLocation, lockFilename))):
-        if(os.path.isfile(lockFilename)):
-            if(os.path.samefile(os.path.abspath(os.path.join(backupLocation, lockFilename)),
-                                os.path.abspath(os.path.join(os.getcwd(), lockFilename)))):
-                print("virheellinen kohde: sama polku")
-                return
-            else:
-                print("löytyi molemmat kasx muokkausaikatiedostot")
-                if(backup.read_note_time(os.path.join(backupLocation, lockFilename)) > backup.read_note_time(lockFilename)):
-                    print("varmuuskopion kasx muokkausaikatiedosto on uudempi")
-                    if(backup.read_note_date(os.path.join(backupLocation, lockFilename)) == backup.read_note_date(lockFilename)):
-                        print("^^oikeasti ei uudempi, sama aika!!!")
-                    else:
-                        print("synkronoi muutokset viimeisimmästä kopiosta")
-                    return
-                else:
-                    print("kasx muokkausaikatiedostotojen vertailu onnistui")
-        else:
-            print("paikallinen kasx muokkausaikatiedosto puuttuu")
-            print("synkronoi muutokset viimeisimmästä kopiosta")
-            return
-    else:
-        print("varmuuskopio kohteesta puuttuu kasx muokkausaikatiedosto")
+    try:
+        local = backup.Local(os.getcwd())
+        backp = backup.Backup(backupLocation)
+    except RuntimeError:
+        return
+
+    if not local.can_backup_into(backp):
         return
 
     if not os.path.isfile(folderFilePath):
@@ -94,7 +81,7 @@ def main():
                 path = line.rstrip("\n")
                 if not path:
                     continue
-                    
+
                 if not os.path.exists(path):
                     print("{} doesn't exist".format(path))
                     return
@@ -108,23 +95,30 @@ def main():
                 elif command == oneCopyCommand:
                     oneCopyList.append(path)
     print("konfiguraatio tiedosto luettu onnistuneesti")
-                    
+
+    rsyncKomento = "rsync -a --delete --progress -o -g --omit-dir-times "
+    if dryRun:
+        rsyncKomento += "-n "
+
+    komentoFullCopy = rsyncKomento + " {0} {1}/full-copy/{2}/"
+    komentoOneCopy = rsyncKomento + " {0} {1}/one-copy/"
+
     for path in fullCopyList:
         if(onlyTest):
-            print("rsync -a --delete --progress {0} {1}/full-copy/{2}/".format(path, backupLocation, dateString))
+            print(komentoFullCopy.format(path, backupLocation, dateString))
         else:
-            os.system("rsync -a --delete --progress {0} {1}/full-copy/{2}/".format(path, backupLocation, dateString))
-        
+            os.system(komentoFullCopy.format(path, backupLocation, dateString))
+
     for path in oneCopyList:
         if(onlyTest):
-            print("rsync -a --delete --progress {0} {1}/one-copy/".format(path, backupLocation, dateString))
+            print(komentoOneCopy.format(path, backupLocation, dateString))
         else:
-            os.system("rsync --delete -a --progress {0} {1}/one-copy/".format(path, backupLocation, dateString))
-   
+            os.system(komentoOneCopy.format(path, backupLocation, dateString))
+
     if not onlyTest:
         backup.write_note(os.path.join(backupLocation, lockFilename), dateString, True)
         backup.write_note(lockFilename, dateString)
         print("molemmat kasx muokkausaikatiedostot päivitettiin")
-   
+
 if __name__ == "__main__":
-    main()         
+    main()

@@ -1,5 +1,6 @@
 
 import json
+import os
 import datetime
 
 
@@ -39,14 +40,22 @@ class Note_:
         self.canSync = noteDict["canSync"]
 
     def timestamp(self):
-        return datetime.datetime.strptime(dateString, dateFormat).timestamp()
+        return datetime.datetime.strptime(self.dateString, dateFormat).timestamp()
 
 
 class DataSource_:
     def __init__(self, path, isLocal):
         self.path_ = path
-        self.note_ = Note_(os.path.join(self.path_, lockFilename))
         self.isLocal_ = isLocal
+
+        try:
+            self.note_ = Note_(os.path.join(self.path_, lockFilename))
+        except OSError:
+            if not isLocal:
+                raise RuntimeError()
+            else:
+                self.note_ = None
+                print("varmuuskopiota ei ole synkronoitu aikaisemmin")
 
     def is_local(self):
         return self.isLocal_
@@ -60,16 +69,15 @@ class DataSource_:
 
     def path(self):
         return self.path_
+    def timestamp(self):
+        return self.note_.timestamp()
 
 class Local(DataSource_):
     def __init__(self, path):
-        try:
-            super().__init__(path, True)
-        except OSError:
-            print("varmuuskopiota ei ole synkronoitu aikaisemmin")
+        super().__init__(path, True)
 
     def can_sync_from(self, backup):
-        if self.is_same(backup):
+        if not self.note_ == None and self.is_same(backup):
             print("virheellinen kohde: sama polku")
             return False
         elif not backup.is_backup():
@@ -78,8 +86,8 @@ class Local(DataSource_):
         elif not backup.can_sync():
             print("kohteeseen ei ole luotu vielä kopiota")
             return False
-        elif backup.timestamp() <= self.timestamp():
-            if backup.timestamp() < self.timestap():
+        elif not self.note_ == None and backup.timestamp() <= self.timestamp():
+            if backup.timestamp() < self.timestamp():
                 print("paikallinen kasx muokkausaikatiedosto on uudempi")
             elif backup.timestamp() == self.timestamp():
                 print("kasx muokkausaikatiedostojen aika on sama")
@@ -98,7 +106,7 @@ class Local(DataSource_):
         elif not backup.is_backup():
             print("kohde ei ole varmuuskopio")
             return False
-        elif backup.timestamp() <= self.timestamp():
+        elif backup.timestamp() > self.timestamp():
             print("varmuuskopion kasx muokkausaikatiedosto on uudempi")
             print("synkronoi muutokset viimeisimmästä kopiosta")
             return False
@@ -109,8 +117,9 @@ class Backup(DataSource_):
     def __init__(self, path):
         try:
             super().__init__(path, False)
-        except OSError:
+        except RuntimeError:
             print("varmuuskopio kohteesta puuttuu kasx muokkausaikatiedosto")
+            raise RuntimeError()
 
     def can_sync(self):
         return self.note_.canSync
