@@ -1,4 +1,6 @@
 
+import version
+
 import json
 import os
 import datetime
@@ -31,9 +33,13 @@ class Note_:
         with open(filename, "r") as notefile:
             noteDict = json.load(notefile)
 
-        if not noteDict["version"] == 1:
-            print("tuntematon versio")
-            raise RuntimeError("tuntematon versio")
+        v = noteDict["version"]
+        if v < version.version:
+            print("Virhe: aja migraatiot notelle: {}".format(filename))
+            raise RuntimeError()
+        if v > version.version:
+            print("Virhe: päivitä kasx-backup versioon: {}".format(versio_stringi(v)))
+            raise RuntimeError()
 
         self.dateString = noteDict["dateString"]
         self.version = noteDict["version"]
