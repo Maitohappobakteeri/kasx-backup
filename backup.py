@@ -12,7 +12,7 @@ lockFilename = ".kasx-backup-note"
 
 def write_note(filename, dateString, canSync=False):
     with open(filename, "w") as notefile:
-        json.dump({"dateString" : dateString, "version": 1, "canSync": canSync}, notefile)
+        json.dump({"dateString" : dateString, "version": 2, "canSync": canSync}, notefile)
 
 def read_note_time(filename):
     date = datetime.datetime.strptime(read_note_date(filename), dateFormat)
