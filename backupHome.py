@@ -115,7 +115,7 @@ def main():
         else:
             os.system(komentoOneCopy.format(path, backupLocation, dateString))
 
-    if not onlyTest:
+    if not onlyTest and not dryRun:
         backup.write_note(os.path.join(backupLocation, lockFilename), dateString, True)
         backup.write_note(lockFilename, dateString)
         print("molemmat kasx muokkausaikatiedostot päivitettiin")
