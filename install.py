@@ -6,7 +6,7 @@ import subprocess
 import shutil
 
 
-filesToInstall = ["backup.py", "backupHome.py", "initBackup.py", "syncHome.py"]
+filesToInstall = ["backup.py", "backupHome.py", "initBackup.py", "syncHome.py", "version.py"]
 suoritettavat = {
     "initBackup.py": "kasx-init",
     "backupHome.py": "kasx-backup",
