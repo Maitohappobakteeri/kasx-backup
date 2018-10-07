@@ -96,7 +96,7 @@ def main():
                     oneCopyList.append(path)
     print("konfiguraatio tiedosto luettu onnistuneesti")
 
-    rsyncKomento = "rsync -a --delete --progress -o -g --omit-dir-times "
+    rsyncKomento = "rsync -R -a --delete --progress -o -g --omit-dir-times "
     if dryRun:
         rsyncKomento += "-n "
 

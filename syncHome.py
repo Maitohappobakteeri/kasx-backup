@@ -92,12 +92,12 @@ def main():
                     oneCopyList.append(path)
     print("konfiguraatio tiedosto luettu onnistuneesti")
 
-    rsyncKomento = "rsync -a --delete --progress -o -g --omit-dir-times "
+    rsyncKomento = "rsync -R -a --delete --progress -o -g --omit-dir-times "
     if dryRun:
         rsyncKomento += "-n "
 
-    komentoFullCopy = rsyncKomento + " {1}/full-copy/{2}/{0} ./"
-    komentoOneCopy = rsyncKomento + " {1}/one-copy/{0} ./"
+    komentoFullCopy = rsyncKomento + " {1}/full-copy/{2}/./{0} ./"
+    komentoOneCopy = rsyncKomento + " {1}/one-copy/./{0} ./"
 
     for path in fullCopyList:
         if(onlyTest):

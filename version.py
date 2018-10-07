@@ -1,8 +1,8 @@
 
-oikeaVersio = (2, 0)
-version = 100 * oikeaVersio[0] + oikeaVersio[1]
-versioStr = "v{}.{}".format(*oikeaVersio)
+version = (2, 0)
+versioStr = "v{}.{}".format(*version)
 
 
-def versio_stringi(lukuEsitys):
-    return "v{}.{}".format(lukuEsitys // 100, lukuEsitys % 100)
+def version_from_string(s):
+    # TODO: Tarkistukset formaatille, regex?
+    return tuple(int(n) for n in s[1:].split("."))

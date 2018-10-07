@@ -12,7 +12,7 @@ lockFilename = ".kasx-backup-note"
 
 def write_note(filename, dateString, canSync=False):
     with open(filename, "w") as notefile:
-        json.dump({"dateString" : dateString, "version": 2, "canSync": canSync}, notefile)
+        json.dump({"dateString" : dateString, "version": version.versioStr, "canSync": canSync}, notefile)
 
 def read_note_time(filename):
     date = datetime.datetime.strptime(read_note_date(filename), dateFormat)
@@ -33,7 +33,7 @@ class Note_:
         with open(filename, "r") as notefile:
             noteDict = json.load(notefile)
 
-        v = noteDict["version"]
+        v = version.version_from_string(noteDict["version"])
         if v < version.version:
             print("Virhe: aja migraatiot notelle: {}".format(filename))
             raise RuntimeError()
