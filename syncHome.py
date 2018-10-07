@@ -22,12 +22,12 @@ def lue_argumentit():
 
 
 def main():
-    #files on full copy list are backed up without touching the old backup
+    # files on full copy list are backed up without touching the old backup
     fullCopyList = []
-    #files on one copy list will overwrite on the last save
+    # files on one copy list will overwrite on the last save
     oneCopyList = []
 
-    #workDir = os.path.expanduser("~")
+    # workDir = os.path.expanduser("~")
     folderFilePath = ".kasx-backup.config"
     lockFilename = ".kasx-backup-note"
 
@@ -47,7 +47,7 @@ def main():
         print("varmuuskopion polun pitää alkaa /")
         return
 
-    #os.chdir(workDir)
+    # os.chdir(workDir)
     try:
         local = backup.Local(os.getcwd())
         backp = backup.Backup(backupLocation)
