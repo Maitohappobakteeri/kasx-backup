@@ -1,5 +1,5 @@
 
-oikeaVersio = (1, 0)
+oikeaVersio = (2, 0)
 version = 100 * oikeaVersio[0] + oikeaVersio[1]
 versioStr = "v{}.{}".format(*oikeaVersio)
 
