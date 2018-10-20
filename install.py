@@ -6,7 +6,15 @@ import subprocess
 import shutil
 
 
-filesToInstall = ["backup.py", "backupHome.py", "initBackup.py", "syncHome.py", "version.py", "kasx-config.py"]
+filesToInstall = [os.path.join("src", f) for f in [
+    "backup.py",
+    "backupHome.py",
+    "initBackup.py",
+    "syncHome.py",
+    "version.py",
+    "kasx-config.py"
+]]
+
 suoritettavat = {
     "initBackup.py": "kasx-init",
     "backupHome.py": "kasx-backup",
@@ -91,7 +99,7 @@ def main():
         os.chdir(dir)
         paketointiHakemisto = package(repo)
         os.chdir(dir)
-        install(paketointiHakemisto)
+        #install(paketointiHakemisto)
 
 
 if __name__ == "__main__":
