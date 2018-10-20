@@ -8,18 +8,18 @@ import shutil
 
 filesToInstall = [os.path.join("src", f) for f in [
     "backup.py",
-    "backupHome.py",
-    "initBackup.py",
-    "syncHome.py",
-    "version.py",
-    "kasx-config.py"
+    "kasx-backup.py",
+    "kasx-init.py",
+    "kasx-sync.py",
+    "kasx-config.py",
+    "version.py"
 ]]
 
 suoritettavat = {
-    "initBackup.py": "kasx-init",
-    "backupHome.py": "kasx-backup",
-    "syncHome.py": "kasx-sync",
-    "kasx-config.py": "kasx-config"
+    "src/kasx-init.py": "kasx-init",
+    "src/kasx-backup.py": "kasx-backup",
+    "src/kasx-sync.py": "kasx-sync",
+    "src/kasx-config.py": "kasx-config"
  }
 
 
@@ -38,12 +38,24 @@ def checkout_git(repoPath):
 def package(repoHakemisto):
     print("Kootaan asennettavia tiedostoja")
     paketointiHakemisto = os.path.join(os.getcwd(), "asennus")
-    os.mkdir(paketointiHakemisto)
 
-    lahdeFilut = [os.path.join(repoHakemisto, f) for f in filesToInstall]
-    kohdeFilut = [os.path.join(paketointiHakemisto, f) for f in filesToInstall]
-    for l, k in zip(lahdeFilut, kohdeFilut):
-        shutil.copyfile(l, k)
+    def tarkista_skipattavat(hakemisto, filut):
+        skipattavat = []
+
+        for filu in filut:
+            kokoPolku = os.path.join(hakemisto, filu)
+            relPolku = os.path.relpath(kokoPolku, repoHakemisto)
+
+            def onko_sisalla(hakemisto, filu):
+                return os.path.commonpath([relPolku, filu]) != relPolku
+
+            if all(onko_sisalla(relPolku, f) for f in filesToInstall):
+                skipattavat.append(filu)
+
+        return skipattavat
+
+    shutil.copytree(repoHakemisto, paketointiHakemisto,
+                    ignore=tarkista_skipattavat)
 
     return paketointiHakemisto
 
@@ -99,7 +111,7 @@ def main():
         os.chdir(dir)
         paketointiHakemisto = package(repo)
         os.chdir(dir)
-        #install(paketointiHakemisto)
+        install(paketointiHakemisto)
 
 
 if __name__ == "__main__":
