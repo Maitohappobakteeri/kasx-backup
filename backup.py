@@ -28,7 +28,7 @@ def read_note_valid_sync(filename):
         return note["canSync"]
 
 
-class Note_:
+class Note:
     def __init__(self, filename):
         with open(filename, "r") as notefile:
             noteDict = json.load(notefile)
@@ -55,7 +55,7 @@ class DataSource_:
         self.isLocal_ = isLocal
 
         try:
-            self.note_ = Note_(os.path.join(self.path_, lockFilename))
+            self.note_ = Note(os.path.join(self.path_, lockFilename))
         except OSError:
             if not isLocal:
                 raise RuntimeError()

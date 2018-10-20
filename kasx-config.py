@@ -13,6 +13,7 @@ import enum
 
 class Toiminto(enum.Enum):
     TULOSTA_VERSIO = enum.auto()
+    PAIVITA = enum.auto()
 
 
 def lue_argumentit():
@@ -21,8 +22,44 @@ def lue_argumentit():
                         help="polku hakemistolle")
     parser.add_argument("-v", "--versio", dest='toiminto', action="append_const",
                         const=Toiminto.TULOSTA_VERSIO, help="tulosta versio")
+    parser.add_argument("-u", "--paivita", dest='toiminto', action="append_const",
+                        const=Toiminto.PAIVITA, help="päivitä lähde tai kohde")
     args = parser.parse_args()
     return args
+
+
+def tulosta_versio(polut):
+    if len(polut) == 0:
+        print("Asennettu versio:", version.versioStr)
+    elif len(polut) == 1:
+        try:
+            notenPolku = polut[0]
+            note = backup.Note(os.path.join(notenPolku, backup.lockFilename))
+            print("Versio:", note.version)
+        except RuntimeError as e:
+            print(e)
+    else:
+        print("Liian monta polkua version tulostukselle!")
+        return
+
+
+def paivita(polut):
+    if len(polut) == 0:
+        polku = os.getcwd()
+    elif len(polut) == 1:
+        polku = polut[0]
+    else:
+        print("Liian monta polkua päivitykselle!")
+        return
+
+    try:
+        note = backup.Note(os.path.join(polku, backup.lockFilename))
+    except RuntimeError as e:
+        print(e)
+        return
+
+    print("Päivitetään {} -> {}".format(note.version, version.versioStr))
+    print("Ei toteutettu!")
 
 
 def main():
@@ -36,7 +73,9 @@ def main():
         return
 
     if Toiminto.TULOSTA_VERSIO in args.toiminto:
-        print("Asennettu versio: {}".format(version.versioStr))
+        return tulosta_versio(args.kohde)
+    elif Toiminto.PAIVITA in args.toiminto:
+        return paivita(args.kohde)
     else:
         raise RuntimeError("Tuntematon toiminto = {}".format(args.toiminto[0]))
 
