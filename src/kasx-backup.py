@@ -2,6 +2,7 @@
 
 
 import backup
+import komento
 
 import os
 import datetime
@@ -96,24 +97,29 @@ def main():
                     oneCopyList.append(path)
     print("konfiguraatio tiedosto luettu onnistuneesti")
 
-    rsyncKomento = "rsync -R -a --delete --progress -o -g --omit-dir-times "
-    if dryRun:
-        rsyncKomento += "-n "
+    fullCopyKohde = "{0}/full-copy/{1}/"
+    oneCopyKohde = "{0}/one-copy/"
 
-    komentoFullCopy = rsyncKomento + " {0} {1}/full-copy/{2}/"
-    komentoOneCopy = rsyncKomento + " {0} {1}/one-copy/"
+    if fullCopyList:
+        os.makedirs(fullCopyKohde.format(backupLocation, dateString))
 
     for path in fullCopyList:
+        kohde = fullCopyKohde.format(backupLocation, dateString)
+        komentoStr = komento.rsync_komento(path, kohde, dryRun)
+
         if(onlyTest):
-            print(komentoFullCopy.format(path, backupLocation, dateString))
+            print(komentoStr)
         else:
-            os.system(komentoFullCopy.format(path, backupLocation, dateString))
+            os.system(komentoStr)
 
     for path in oneCopyList:
+        kohde = oneCopyKohde.format(backupLocation)
+        komentoStr = komento.rsync_komento(path, kohde, dryRun)
+
         if(onlyTest):
-            print(komentoOneCopy.format(path, backupLocation, dateString))
+            print(komentoStr)
         else:
-            os.system(komentoOneCopy.format(path, backupLocation, dateString))
+            os.system(komentoStr)
 
     if not onlyTest and not dryRun:
         backup.write_note(os.path.join(backupLocation, lockFilename), dateString, True)
