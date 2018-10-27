@@ -35,7 +35,8 @@ def tulosta_versio(polut):
     elif len(polut) == 1:
         try:
             notenPolku = polut[0]
-            note = backup.Note(os.path.join(notenPolku, backup.lockFilename))
+            note = backup.Note(os.path.join(notenPolku, backup.lockFilename),
+                               False)
             print("Versio:", note.version)
         except RuntimeError as e:
             print(e)
