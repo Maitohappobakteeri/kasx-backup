@@ -36,7 +36,6 @@ def main():
         print("varmuuskopion polun pitää alkaa /")
         return
 
-    #os.chdir(workDir)
     try:
         local = backup.Local(os.getcwd())
         backp = backup.Backup(backupLocation)
@@ -52,6 +51,10 @@ def main():
 
     with open(config.configFilename, "r") as f:
         conf = config.Config(f.read())
+
+    if not conf.tarkista_tiedostot():
+        return
+
     print("konfiguraatio tiedosto luettu onnistuneesti")
 
     fullCopyKohde = "{0}/full-copy/{1}/"
