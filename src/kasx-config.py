@@ -3,6 +3,7 @@
 
 import backup
 import version
+import paivita
 
 import os
 import datetime
@@ -43,7 +44,7 @@ def tulosta_versio(polut):
         return
 
 
-def paivita(polut):
+def paivita_(polut):
     if len(polut) == 0:
         polku = os.getcwd()
     elif len(polut) == 1:
@@ -53,13 +54,10 @@ def paivita(polut):
         return
 
     try:
-        note = backup.Note(os.path.join(polku, backup.lockFilename))
+        paivita.paivita(polku, version.version)
     except RuntimeError as e:
         print(e)
         return
-
-    print("Päivitetään {} -> {}".format(note.version, version.versioStr))
-    print("Ei toteutettu!")
 
 
 def main():
@@ -75,7 +73,7 @@ def main():
     if Toiminto.TULOSTA_VERSIO in args.toiminto:
         return tulosta_versio(args.kohde)
     elif Toiminto.PAIVITA in args.toiminto:
-        return paivita(args.kohde)
+        return paivita_(args.kohde)
     else:
         raise RuntimeError("Tuntematon toiminto = {}".format(args.toiminto[0]))
 

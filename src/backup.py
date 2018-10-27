@@ -14,6 +14,10 @@ def write_note(filename, dateString, canSync=False):
     with open(filename, "w") as notefile:
         json.dump({"dateString" : dateString, "version": version.versioStr, "canSync": canSync}, notefile)
 
+def write_note_with_version(filename, dateString, v, canSync):
+    with open(filename, "w") as notefile:
+        json.dump({"dateString" : dateString, "version": v, "canSync": canSync}, notefile)
+
 def read_note_time(filename):
     date = datetime.datetime.strptime(read_note_date(filename), dateFormat)
     return date.timestamp()
@@ -29,17 +33,19 @@ def read_note_valid_sync(filename):
 
 
 class Note:
-    def __init__(self, filename):
+    def __init__(self, filename, vaadiVersio=True):
         with open(filename, "r") as notefile:
             noteDict = json.load(notefile)
 
         v = version.version_from_string(noteDict["version"])
-        if v < version.version:
-            print("Virhe: aja migraatiot notelle: {}".format(filename))
-            raise RuntimeError()
-        if v > version.version:
-            print("Virhe: päivitä kasx-backup versioon: {}".format(versio_stringi(v)))
-            raise RuntimeError()
+
+        if vaadiVersio:
+            if v < version.version:
+                print("Virhe: aja migraatiot notelle: {}".format(filename))
+                raise RuntimeError()
+            if v > version.version:
+                print("Virhe: päivitä kasx-backup versioon: {}".format(version.string_from_version(v)))
+                raise RuntimeError()
 
         self.dateString = noteDict["dateString"]
         self.version = noteDict["version"]
