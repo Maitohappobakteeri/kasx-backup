@@ -3,6 +3,7 @@
 
 import backup
 import komento
+import config
 
 import os
 import datetime
@@ -23,20 +24,6 @@ def lue_argumentit():
 
 
 def main():
-    # files on full copy list are backed up without touching the old backup
-    fullCopyList = []
-    # files on one copy list will overwrite on the last save
-    oneCopyList = []
-
-    # workDir = os.path.expanduser("~")
-    folderFilePath = ".kasx-backup.config"
-    lockFilename = ".kasx-backup-note"
-
-    commandCharacter = '!'
-    fullCopyCommand = "saveall"
-    oneCopyCommand = "onecopy"
-
-    dateFormat = "%Y_%m_%d_%H_%M_%S"
     dateString = None
 
     args = lue_argumentit()
@@ -58,45 +45,16 @@ def main():
     if not local.can_sync_from(backp):
         return
 
-    dateString = backup.read_note_date(os.path.join(backupLocation, lockFilename))
+    dateString = backup.read_note_date(os.path.join(backupLocation, backup.lockFilename))
 
-    with open(folderFilePath, "r") as f:
-        command = ""
-
-        for line in f:
-            #kommenttirivi
-            if line[0] == " " or line[0] == "#":
-                continue
-            #komentorivi
-            elif line[0] == commandCharacter:
-                command = line[1:].rstrip().lstrip().lower().replace(" ", "").replace("\t", "")
-                if(command not in (fullCopyCommand, oneCopyCommand)):
-                    print("invalid command: {}".format(command))
-                    return
-                print("command: {}".format(command))
-            #polku
-            else:
-                path = line.rstrip("\n")
-                if not path:
-                    continue
-
-                #if not os.path.exists(path):
-                #    print("{} doesn't exist".format(path))
-                #    return
-                #elif os.path.isdir(path):
-                #    if not path[-1] == "/":
-                #        path += "/"
-
-                if command == fullCopyCommand:
-                    fullCopyList.append(path)
-                elif command == oneCopyCommand:
-                    oneCopyList.append(path)
+    with open(config.configFilename, "r") as f:
+        conf = config.Config(f.read())
     print("konfiguraatio tiedosto luettu onnistuneesti")
 
     fullCopyLahde = "{1}/full-copy/{2}/./{0}"
     oneCopyLahde = "{1}/one-copy/./{0}"
 
-    for path in fullCopyList:
+    for path in conf.fullCopyList:
         lahde = fullCopyLahde.format(path, backupLocation, dateString)
         komentoStr = komento.rsync_komento(lahde, "./", dryRun)
 
@@ -105,7 +63,7 @@ def main():
         else:
             os.system(komentoStr)
 
-    for path in oneCopyList:
+    for path in conf.oneCopyList:
         lahde = oneCopyLahde.format(path, backupLocation)
         komentoStr = komento.rsync_komento(lahde, "./", dryRun)
 
@@ -115,7 +73,7 @@ def main():
             os.system(komentoStr)
 
     if not onlyTest and not dryRun:
-        backup.write_note(lockFilename, dateString)
+        backup.write_note(backup.lockFilename, dateString)
         print("paikallinen kasx muokkausaikatiedosto päivitettiin")
 
 
