@@ -12,7 +12,10 @@ filesToInstall = [os.path.join("src", f) for f in [
     "kasx-init.py",
     "kasx-sync.py",
     "kasx-config.py",
-    "version.py"
+    "version.py",
+    "paivita.py",
+    "config.py",
+    "komento.py"
 ]]
 
 suoritettavat = {
