@@ -7,15 +7,15 @@ import shutil
 
 
 filesToInstall = [os.path.join("src", f) for f in [
-    "backup.py",
     "kasx-backup.py",
     "kasx-init.py",
     "kasx-sync.py",
     "kasx-config.py",
     "version.py",
-    "paivita.py",
-    "config.py",
-    "komento.py"
+    "komento.py",
+    "varmuuskopiot/backup.py",
+    "varmuuskopiot/paivita.py",
+    "varmuuskopiot/config.py"
 ]]
 
 suoritettavat = {
