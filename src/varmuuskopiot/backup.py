@@ -1,9 +1,11 @@
 
+from varmuuskopiot import config
 import versiot
 
 import json
 import os
 import datetime
+import shutil
 
 
 dateFormat = "%Y_%m_%d_%H_%M_%S"
@@ -38,6 +40,11 @@ def read_note_valid_sync(filename):
     with open(filename, "r") as notefile:
         note = json.load(notefile)
         return note["canSync"]
+
+
+def kopioi_konfiguraatio(lahdeHakemisto, kohdeHakemisto):
+    shutil.copyfile(os.path.join(lahdeHakemisto, config.configFilename),
+                    os.path.join(kohdeHakemisto, config.configFilename))
 
 
 class Note:
@@ -95,6 +102,12 @@ class DataSource_:
 
     def timestamp(self):
         return self.note_.timestamp()
+
+    def konfiguraatio_tiedostonimi(self):
+        return os.path.join(self.path_, config.configFilename)
+
+    def kopioi_konfiguraatio(self, kohde):
+        kopioi_konfiguraatio(self.path(), kohde.path())
 
 
 class Local(DataSource_):

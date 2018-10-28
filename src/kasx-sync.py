@@ -44,6 +44,9 @@ def main():
     if not local.can_sync_from(backp):
         return
 
+    backp.kopioi_konfiguraatio(local)
+
+    # TODO: Ei avata erillisiä noteja täällä
     dateString = backup.read_note_date(os.path.join(backupLocation, backup.lockFilename))
 
     with open(config.configFilename, "r") as f:
@@ -72,6 +75,7 @@ def main():
             os.system(komentoStr)
 
     if not onlyTest and not dryRun:
+        # TODO: Backup kirjoittaa oman notensa
         backup.write_note(backup.lockFilename, dateString)
         print("paikallinen kasx muokkausaikatiedosto päivitettiin")
 

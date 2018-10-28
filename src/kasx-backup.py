@@ -48,6 +48,8 @@ def main():
         print("{} ei ole olemassa".format(config.configFilename))
         return
 
+    local.kopioi_konfiguraatio(backp)
+
     with open(config.configFilename, "r") as f:
         conf = config.Config(f.read())
 
