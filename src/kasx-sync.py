@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
 
-import backup
+from varmuuskopiot import backup, config
 import komento
-import config
 
 import os
 import datetime

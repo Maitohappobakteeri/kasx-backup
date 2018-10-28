@@ -1,12 +1,12 @@
 
-version = (2, 3)
-versioStr = "v{}.{}".format(*version)
+versio = (2, 3)
+versioStr = "v{}.{}".format(*versio)
 
 
-def version_from_string(s):
+def versio_stringista(s):
     # TODO: Tarkistukset formaatille, regex?
     return tuple(int(n) for n in s[1:].split("."))
 
 
-def string_from_version(v):
+def string_versiosta(v):
     return "v{}.{}".format(*v)

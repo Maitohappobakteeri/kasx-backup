@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
 
-import backup
+from varmuuskopiot import backup, config
 import komento
-import config
 
 import os
 import datetime
@@ -86,6 +85,7 @@ def main():
                           dateString, True)
         backup.write_note(backup.lockFilename, dateString)
         print("molemmat kasx muokkausaikatiedostot päivitettiin")
+
 
 if __name__ == "__main__":
     main()

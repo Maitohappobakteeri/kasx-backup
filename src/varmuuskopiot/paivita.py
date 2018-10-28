@@ -1,14 +1,14 @@
 
 
-import version
-import backup
+import versiot
+from varmuuskopiot import backup
 
 import os
 
 
 def paivita(hakemisto, uusiVersio):
     note = backup.Note(os.path.join(hakemisto, backup.lockFilename), False)
-    vanhaVersio = versio = version.version_from_string(note.version)
+    vanhaVersio = versio = versiot.versio_stringista(note.version)
 
     if versio == uusiVersio:
         print("Versio on jo haluttu")
@@ -49,8 +49,8 @@ class Paivitys:
 
         def palautaVersio(hakemisto):
             print("Päivitetään versio {} -> {}".format(
-                version.string_from_version(self.vanhaVersio_),
-                version.string_from_version(self.uusiVersio_)
+                versiot.string_versiosta(self.vanhaVersio_),
+                versiot.string_versiosta(self.uusiVersio_)
             ))
 
             try:
@@ -82,7 +82,7 @@ def tyhja_paivitys_2_1_(hakemisto, uusiVersio):
     noteFilunimi = os.path.join(hakemisto, backup.lockFilename)
     backup.write_note_with_version(noteFilunimi,
                                    note.dateString,
-                                   version.string_from_version(uusiVersio),
+                                   versiot.string_versiosta(uusiVersio),
                                    note.canSync)
 
     return True

@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
 
-import backup
-import version
-import paivita
+from varmuuskopiot import *
+import versiot
 
 import os
 import datetime
@@ -31,7 +30,7 @@ def lue_argumentit():
 
 def tulosta_versio(polut):
     if len(polut) == 0:
-        print("Asennettu versio:", version.versioStr)
+        print("Asennettu versio:", versiot.versioStr)
     elif len(polut) == 1:
         try:
             notenPolku = polut[0]
@@ -55,7 +54,7 @@ def paivita_(polut):
         return
 
     try:
-        paivita.paivita(polku, version.version)
+        paivita.paivita(polku, versiot.versio)
     except RuntimeError as e:
         print(e)
         return

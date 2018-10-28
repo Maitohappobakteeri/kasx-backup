@@ -1,5 +1,5 @@
 
-import version
+import versiot
 
 import json
 import os
@@ -12,19 +12,27 @@ lockFilename = ".kasx-backup-note"
 
 def write_note(filename, dateString, canSync=False):
     with open(filename, "w") as notefile:
-        json.dump({"dateString" : dateString, "version": version.versioStr, "canSync": canSync}, notefile)
+        json.dump({"dateString": dateString,
+                   "version": versiot.versioStr,
+                   "canSync": canSync},
+                  notefile)
+
 
 def write_note_with_version(filename, dateString, v, canSync):
     with open(filename, "w") as notefile:
-        json.dump({"dateString" : dateString, "version": v, "canSync": canSync}, notefile)
+        json.dump({"dateString": dateString, "version": v, "canSync": canSync},
+                  notefile)
+
 
 def read_note_time(filename):
     date = datetime.datetime.strptime(read_note_date(filename), dateFormat)
     return date.timestamp()
 
+
 def read_note_date(filename):
     with open(filename, "r") as notefile:
         return json.load(notefile)["dateString"]
+
 
 def read_note_valid_sync(filename):
     with open(filename, "r") as notefile:
@@ -37,14 +45,15 @@ class Note:
         with open(filename, "r") as notefile:
             noteDict = json.load(notefile)
 
-        v = version.version_from_string(noteDict["version"])
+        v = versiot.versio_stringista(noteDict["version"])
 
         if vaadiVersio:
-            if v < version.version:
+            if v < versiot.versio:
                 print("Virhe: aja migraatiot notelle: {}".format(filename))
                 raise RuntimeError()
-            if v > version.version:
-                print("Virhe: päivitä kasx-backup versioon: {}".format(version.string_from_version(v)))
+            if v > versiot.versio:
+                print("Virhe: päivitä kasx-backup versioon: {}"
+                      .format(versiot.string_versiosta(v)))
                 raise RuntimeError()
 
         self.dateString = noteDict["dateString"]
@@ -52,7 +61,9 @@ class Note:
         self.canSync = noteDict["canSync"]
 
     def timestamp(self):
-        return datetime.datetime.strptime(self.dateString, dateFormat).timestamp()
+        return datetime.datetime \
+               .strptime(self.dateString, dateFormat) \
+               .timestamp()
 
 
 class DataSource_:
@@ -81,15 +92,17 @@ class DataSource_:
 
     def path(self):
         return self.path_
+
     def timestamp(self):
         return self.note_.timestamp()
+
 
 class Local(DataSource_):
     def __init__(self, path):
         super().__init__(path, True)
 
     def can_sync_from(self, backup):
-        if not self.note_ == None and self.is_same(backup):
+        if self.note_ is not None and self.is_same(backup):
             print("virheellinen kohde: sama polku")
             return False
         elif not backup.is_backup():
@@ -98,7 +111,7 @@ class Local(DataSource_):
         elif not backup.can_sync():
             print("kohteeseen ei ole luotu vielä kopiota")
             return False
-        elif not self.note_ == None and backup.timestamp() <= self.timestamp():
+        elif self.note_ is not None and backup.timestamp() <= self.timestamp():
             if backup.timestamp() < self.timestamp():
                 print("paikallinen kasx muokkausaikatiedosto on uudempi")
             elif backup.timestamp() == self.timestamp():
@@ -124,6 +137,7 @@ class Local(DataSource_):
             return False
         else:
             return True
+
 
 class Backup(DataSource_):
     def __init__(self, path):
