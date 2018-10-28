@@ -13,6 +13,7 @@ filesToInstall = [os.path.join("src", f) for f in [
     "kasx-config.py",
     "versiot.py",
     "komento.py",
+    "varmuuskopiot/__init__.py",
     "varmuuskopiot/backup.py",
     "varmuuskopiot/paivita.py",
     "varmuuskopiot/config.py"
