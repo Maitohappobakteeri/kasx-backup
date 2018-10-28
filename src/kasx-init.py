@@ -57,6 +57,7 @@ def main():
         conf = config.Config(f.read())
 
     if malliKonfiguraatio is not None:
+        print("kopioidaan konfiguraatio tiedosto")
         backup.kopioi_konfiguraatio(malliKonfiguraatio, backupLocation)
 
     print("konfiguraatio tiedosto luettu onnistuneesti")

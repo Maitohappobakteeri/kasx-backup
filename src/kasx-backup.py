@@ -48,6 +48,7 @@ def main():
         print("{} ei ole olemassa".format(config.configFilename))
         return
 
+    print("kopioidaan konfiguraatio tiedosto")
     local.kopioi_konfiguraatio(backp)
 
     with open(config.configFilename, "r") as f:

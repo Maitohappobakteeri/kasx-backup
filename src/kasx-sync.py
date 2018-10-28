@@ -44,6 +44,7 @@ def main():
     if not local.can_sync_from(backp):
         return
 
+    print("kopioidaan konfiguraatio tiedosto")
     backp.kopioi_konfiguraatio(local)
 
     # TODO: Ei avata erillisiä noteja täällä
