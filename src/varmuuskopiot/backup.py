@@ -77,8 +77,8 @@ class DataSource_:
             if not isLocal:
                 raise RuntimeError()
             else:
-                self.note_ = None
-                print("varmuuskopiota ei ole synkronoitu aikaisemmin")
+                print("aja kasx-init hakemistolle", path)
+                raise RuntimeError()
 
     def is_local(self):
         return self.isLocal_
@@ -87,8 +87,8 @@ class DataSource_:
         return not self.is_local()
 
     def is_same(self, dsource):
-        return os.path.samefile(os.path.abspath(os.path.join(self.path_, lockFilename)),
-                                os.path.abspath(os.path.join(dsource.path_, lockFilename)))
+        return os.path.samefile(os.path.abspath(self.path_),
+                                os.path.abspath(dsource.path_))
 
     def path(self):
         return self.path_
