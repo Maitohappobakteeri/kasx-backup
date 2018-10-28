@@ -1,4 +1,4 @@
 
-import varmuuskopiot.backup
-import varmuuskopiot.config
-import varmuuskopiot.paivita
+import varmuuskopiot.backup  # noqa: F401
+import varmuuskopiot.config  # noqa: F401
+import varmuuskopiot.paivita  # noqa: F401

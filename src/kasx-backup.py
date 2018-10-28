@@ -6,7 +6,6 @@ import komento
 
 import os
 import datetime
-import sys
 import argparse
 
 

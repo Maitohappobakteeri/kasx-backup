@@ -103,6 +103,9 @@ class DataSource_:
     def timestamp(self):
         return self.note_.timestamp()
 
+    def date_string(self):
+        return self.note_.dateString
+
     def konfiguraatio_tiedostonimi(self):
         return os.path.join(self.path_, config.configFilename)
 

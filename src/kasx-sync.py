@@ -5,8 +5,6 @@ from varmuuskopiot import backup, config
 import komento
 
 import os
-import datetime
-import sys
 import argparse
 
 
@@ -47,8 +45,7 @@ def main():
     print("kopioidaan konfiguraatio tiedosto")
     backp.kopioi_konfiguraatio(local)
 
-    # TODO: Ei avata erillisiä noteja täällä
-    dateString = backup.read_note_date(os.path.join(backupLocation, backup.lockFilename))
+    dateString = backup.date_string()
 
     with open(config.configFilename, "r") as f:
         conf = config.Config(f.read())

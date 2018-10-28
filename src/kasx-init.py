@@ -5,7 +5,6 @@ from varmuuskopiot import backup, config
 
 import os
 import datetime
-import sys
 import argparse
 
 
@@ -53,8 +52,9 @@ def main():
         print("{} ei ole olemassa".format(konfigTiedostonimi))
         return
 
+    # Testataan vain konffin oikea muoto
     with open(konfigTiedostonimi, "r") as f:
-        conf = config.Config(f.read())
+        config.Config(f.read())
 
     if malliKonfiguraatio is not None:
         print("kopioidaan konfiguraatio tiedosto")

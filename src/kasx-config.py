@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
 
-from varmuuskopiot import *
+from varmuuskopiot import backup, paivita
 import versiot
 
 import os
-import datetime
-import sys
 import argparse
 import enum
 
@@ -20,10 +18,12 @@ def lue_argumentit():
     parser = argparse.ArgumentParser()
     parser.add_argument("kohde", default=[], nargs="*",
                         help="polku hakemistolle")
-    parser.add_argument("-v", "--versio", dest='toiminto', action="append_const",
-                        const=Toiminto.TULOSTA_VERSIO, help="tulosta versio")
-    parser.add_argument("-u", "--paivita", dest='toiminto', action="append_const",
-                        const=Toiminto.PAIVITA, help="päivitä lähde tai kohde")
+    parser.add_argument("-v", "--versio", dest='toiminto',
+                        action="append_const", const=Toiminto.TULOSTA_VERSIO,
+                        help="tulosta versio")
+    parser.add_argument("-u", "--paivita", dest='toiminto',
+                        action="append_const", const=Toiminto.PAIVITA,
+                        help="päivitä lähde tai kohde")
     args = parser.parse_args()
     return args
 

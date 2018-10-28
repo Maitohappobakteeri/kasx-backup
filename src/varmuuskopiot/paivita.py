@@ -8,7 +8,7 @@ import os
 
 def paivita(hakemisto, uusiVersio):
     note = backup.Note(os.path.join(hakemisto, backup.lockFilename), False)
-    vanhaVersio = versio = versiot.versio_stringista(note.version)
+    versio = versiot.versio_stringista(note.version)
 
     if versio == uusiVersio:
         print("Versio on jo haluttu")

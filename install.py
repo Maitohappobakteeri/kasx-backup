@@ -77,14 +77,12 @@ def kopioi_kirjasto(paketointiHakemisto):
 
 def aseta_oikeudet(kirjastoHakemisto):
     print("Asetetaan tiedosto-oikeudet")
-    for filunNimi in suoritettavat:
-        filu = os.path.join(kirjastoHakemisto, filunNimi)
-        os.chmod(kirjastoHakemisto, 0o755)
-        for root, dirs, files in os.walk(kirjastoHakemisto):
-            for d in dirs:
-                os.chmod(os.path.join(root, d), 0o755)
-            for f in files:
-                os.chmod(os.path.join(root, f), 0o755)
+    os.chmod(kirjastoHakemisto, 0o755)
+    for root, dirs, files in os.walk(kirjastoHakemisto):
+        for d in dirs:
+            os.chmod(os.path.join(root, d), 0o755)
+        for f in files:
+            os.chmod(os.path.join(root, f), 0o755)
 
 
 def luo_linkit(kirjastoHakemisto):

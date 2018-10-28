@@ -25,7 +25,11 @@ class Config:
                 continue
             # komentorivi
             elif line[0] == commandCharacter:
-                command = line[1:].rstrip().lstrip().lower().replace(" ", "").replace("\t", "")
+                command = line[1:].rstrip() \
+                                  .lstrip() \
+                                  .lower() \
+                                  .replace(" ", "") \
+                                  .replace("\t", "")
                 if(command not in (fullCopyCommand, oneCopyCommand)):
                     print("invalid command: {}".format(command))
                     raise RuntimeError()
