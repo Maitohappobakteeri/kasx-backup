@@ -68,18 +68,16 @@ def main():
         kohde = fullCopyKohde.format(backupLocation, dateString)
         komentoStr = komento.rsync_komento(path, kohde, dryRun)
 
-        if(onlyTest):
-            print(komentoStr)
-        else:
+        print(komentoStr)
+        if not onlyTest:
             os.system(komentoStr)
 
     for path in conf.oneCopyList:
         kohde = oneCopyKohde.format(backupLocation)
         komentoStr = komento.rsync_komento(path, kohde, dryRun)
 
-        if(onlyTest):
-            print(komentoStr)
-        else:
+        print(komentoStr)
+        if not onlyTest:
             os.system(komentoStr)
 
     if not onlyTest and not dryRun:
