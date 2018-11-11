@@ -1,7 +1,7 @@
 
 
 import versiot
-from varmuuskopiot import backup
+from varmuuskopiot import backup, config
 
 import os
 
@@ -59,6 +59,9 @@ class Paivitys:
                 print(e)
                 onnistuiko = False
 
+            if onnistuiko:
+                nosta_versio_(hakemisto, self.uusiVersio_)
+
             return (self.uusiVersio_, onnistuiko)
 
         paivitykset_[self.vanhaVersio_] = palautaVersio
@@ -90,16 +93,33 @@ def paivita_2_5_to_2_6_(hakemisto):
     return tyhja_paivitys_2_1_(hakemisto, (2, 6))
 
 
+@Paivitys((2, 6), (2, 7))
+def paivita_2_6_to_2_7_(hakemisto):
+    print("Korjataan konfiguraatiokomentojen muoto")
+    with open(os.path.join(hakemisto, config.configFilename), "r") as f:
+        rivit = [r.rstrip() for r in f.readlines()]
+    for i, rivi in enumerate(rivit):
+        siivottuRivi = rivi.strip()
+        if not len(siivottuRivi) == 0 and siivottuRivi[0] == "!":
+            rivit[i] = siivottuRivi.replace(" ", "")
+    with open(os.path.join(hakemisto, config.configFilename), "w") as f:
+        for rivi in rivit:
+            print(rivi, file=f)
+    return True
+
+
 def tyhja_paivitys_2_1_(hakemisto, uusiVersio):
     print("Ei muutoksia, nostetaan vain versiota")
+    return True
 
+
+def nosta_versio_(hakemisto, uusiVersio):
     note = backup.Note(os.path.join(hakemisto, backup.lockFilename), False)
     noteFilunimi = os.path.join(hakemisto, backup.lockFilename)
     backup.write_note_with_version(noteFilunimi,
                                    note.dateString,
                                    versiot.string_versiosta(uusiVersio),
                                    note.canSync)
-
     return True
 
 
