@@ -45,7 +45,7 @@ def main():
     print("kopioidaan konfiguraatio tiedosto")
     backp.kopioi_konfiguraatio(local)
 
-    dateString = backup.date_string()
+    dateString = backp.date_string()
 
     with open(config.configFilename, "r") as f:
         conf = config.Config(f.read())
