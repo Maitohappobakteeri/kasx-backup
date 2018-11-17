@@ -17,6 +17,7 @@ filesToInstall = [os.path.join("src", f) for f in [
     "varmuuskopiot/backup.py",
     "varmuuskopiot/paivita.py",
     "varmuuskopiot/config.py",
+    "varmuuskopiot/environment.py",
     "varmuuskopiot/vaihtoehdot/valinta.py"
 ]]
 

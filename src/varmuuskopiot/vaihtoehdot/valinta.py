@@ -1,12 +1,5 @@
 
 
-import socket
-
-
-def gethostname():
-    return socket.gethostname()
-
-
 class Vaihtoehto:
     def __init__(self, ehto, kohdepolku):
         self.kohdepolku = kohdepolku
@@ -14,7 +7,7 @@ class Vaihtoehto:
 
     @staticmethod
     def luo_hostname_ehto(hostname, kohdepolku):
-        return Vaihtoehto((lambda x: gethostname() == hostname), kohdepolku)
+        return Vaihtoehto((lambda env: env.hostname == hostname), kohdepolku)
 
 
 class Valinta:
@@ -25,5 +18,10 @@ class Valinta:
     def lisaa_vaihtoehto(self, vaihtoehto):
         self.vaihtoehdot.append(vaihtoehto)
 
-    def valitse(self):
-        return next((v.kohdepolku for v in self.vaihtoehdot if v.ehto(None)), None)
+    def valitse(self, environment):
+        matches = (
+            v.kohdepolku
+            for v in self.vaihtoehdot
+            if v.ehto(environment)
+        )
+        return next(matches, None)

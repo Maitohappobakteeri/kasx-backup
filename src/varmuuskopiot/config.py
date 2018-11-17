@@ -24,7 +24,7 @@ class Lista(enum.Enum):
 
 
 class Config:
-    def __init__(self, configString):
+    def __init__(self, environment, configString):
         # files on full copy list are backed up without touching the old backup
         self.fullCopyList = []
         # files on one copy list will overwrite on the last save
@@ -58,7 +58,7 @@ class Config:
                     valinta = Valinta(argumentit[0])
                     for vaihtoehto in lue_vaihtoehdot(rivit):
                         valinta.lisaa_vaihtoehto(vaihtoehto)
-                    kohdepolku = valinta.valitse()
+                    kohdepolku = valinta.valitse(environment)
                     if kohdepolku is not None:
                         if valittuLista is None:
                             print("saatiin polku ennen valittua listaa:", kohdepolku)
