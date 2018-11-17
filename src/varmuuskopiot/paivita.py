@@ -118,6 +118,11 @@ def paivita_2_8_to_2_9_(hakemisto):
     return tyhja_paivitys_2_1_(hakemisto, (2, 9))
 
 
+@Paivitys((2, 9), (2, 10))
+def paivita_2_9_to_2_10_(hakemisto):
+    return tyhja_paivitys_2_1_(hakemisto, (2, 10))
+
+
 def tyhja_paivitys_2_1_(hakemisto, uusiVersio):
     print("Ei muutoksia, nostetaan vain versiota")
     return True

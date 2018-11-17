@@ -1,5 +1,5 @@
 
-versio = (2, 9)
+versio = (2, 10)
 versioStr = "v{}.{}".format(*versio)
 
 
