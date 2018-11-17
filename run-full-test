@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+cd "$DIR"
+
+add-color ()
+{
+    echo $(tput setaf $1)"${@:2}"$(tput sgr0)
+}
+
+echo -n $(tput setaf 1)
+{
+    cd full-test &&
+    rm -Rf {bak,target}/* &&
+    cd src &&
+    $DIR/src/kasx-config.py -v . &&
+    $DIR/src/kasx-config.py -u &&
+    $DIR/src/kasx-init.py -k . $(realpath ../bak) &&
+    $DIR/src/kasx-backup.py $(realpath ../bak) &&
+    cd ../target &&
+    $DIR/src/kasx-init.py -k ../bak $(realpath .) &&
+    $DIR/src/kasx-sync.py $(realpath ../bak)
+} | {
+    while read line;
+    do
+        echo -n $(tput setaf 0)
+        echo "$line"
+        echo -n $(tput setaf 1)
+    done
+}
