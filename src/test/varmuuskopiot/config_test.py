@@ -15,15 +15,26 @@ class ConfigTest(unittest.TestCase):
             conf = Config(f.read())
 
         self.assertEqual({"somefile", "anotherone"}, set(conf.fullCopyList))
-        self.assertEqual({"Documents", "Music", "projects"}, set(conf.oneCopyList))
+
+        self.assertEqual(
+            {"Documents", "Music", "projects"},
+            set(conf.oneCopyList)
+        )
 
     def test_config_with_optional(self):
         def test_simple_config(self):
             with open(os.path.join(dir_, "test2.config")) as f:
                 conf = Config(f.read())
 
-            self.assertEqual({"somefile", "anotherone"}, set(conf.fullCopyList))
-            self.assertEqual({"Documents", "Music", "projects"}, set(conf.oneCopyList))
+            self.assertEqual(
+                {"somefile", "anotherone"},
+                set(conf.fullCopyList)
+            )
+
+            self.assertEqual(
+                {"Documents", "Music", "projects"},
+                set(conf.oneCopyList)
+            )
 
 
 if __name__ == '__main__':
