@@ -35,8 +35,10 @@ class Config:
 
         rivit = more_itertools.peekable(configString.split("\n"))
         for line in rivit:
+            if not line:
+                continue
             # kommenttirivi
-            if not line or line[0] == " " or line[0] == "#":
+            elif line[0] == "#":
                 continue
             # komentorivi
             elif line[0] == commandCharacter:
@@ -70,7 +72,7 @@ class Config:
                             self.oneCopyList.append(kohdepolku)
             # polku
             else:
-                path = line.rstrip("\n")
+                path = line.strip()
                 if not path:
                     continue
 
