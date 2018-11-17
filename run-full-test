@@ -12,6 +12,7 @@ echo -n $(tput setaf 1)
 {
     cd full-test &&
     rm -Rf {bak,target}/* &&
+    rm -Rf {bak,target}/.kasx-* &&
     cd src &&
     $DIR/src/kasx-config.py -v . &&
     $DIR/src/kasx-config.py -u &&
