@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+cd "$DIR"
+
+add-color ()
+{
+    echo $(tput setaf $1)"${@:2}"$(tput sgr0)
+}
+
+cd src
+python -m unittest discover --pattern "*_test.py" 2>&1 > /dev/null |
+    sed -r 's/^(FAIL.*)/'"$(add-color 1 '\1')"'/'
