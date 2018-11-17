@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 
+from varmuuskopiot.environment import Environment
 from varmuuskopiot import backup, config
 import komento
 
@@ -47,8 +48,9 @@ def main():
 
     dateString = backp.date_string()
 
+    environment = Environment.current_environment()
     with open(config.configFilename, "r") as f:
-        conf = config.Config(f.read())
+        conf = config.Config(environment, f.read())
     print("konfiguraatio tiedosto luettu onnistuneesti")
 
     fullCopyLahde = "{1}/full-copy/{2}/./{0}"

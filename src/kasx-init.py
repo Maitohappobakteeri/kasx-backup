@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 
+from varmuuskopiot.environment import Environment
 from varmuuskopiot import backup, config
 
 import os
@@ -53,8 +54,9 @@ def main():
         return
 
     # Testataan vain konffin oikea muoto
+    environment = Environment.current_environment()
     with open(konfigTiedostonimi, "r") as f:
-        config.Config(f.read())
+        config.Config(environment, f.read())
 
     if malliKonfiguraatio is not None:
         print("kopioidaan konfiguraatio tiedosto")

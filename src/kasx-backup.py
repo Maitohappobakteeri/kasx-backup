@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 
+from varmuuskopiot.environment import Environment
 from varmuuskopiot import backup, config
 import komento
 
@@ -50,8 +51,9 @@ def main():
     print("kopioidaan konfiguraatio tiedosto")
     local.kopioi_konfiguraatio(backp)
 
+    environment = Environment.current_environment()
     with open(config.configFilename, "r") as f:
-        conf = config.Config(f.read())
+        conf = config.Config(environment, f.read())
 
     if not conf.tarkista_tiedostot():
         return
