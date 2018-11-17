@@ -7,11 +7,13 @@ import versiot
 import os
 import argparse
 import enum
+import datetime
 
 
 class Toiminto(enum.Enum):
     TULOSTA_VERSIO = enum.auto()
     PAIVITA = enum.auto()
+    PRINT_TIME = enum.auto()
 
 
 def lue_argumentit():
@@ -24,6 +26,9 @@ def lue_argumentit():
     parser.add_argument("-u", "--paivita", dest='toiminto',
                         action="append_const", const=Toiminto.PAIVITA,
                         help="päivitä lähde tai kohde")
+    parser.add_argument("-t", "--get-time", dest='toiminto',
+                        action="append_const", const=Toiminto.PRINT_TIME,
+                        help="print when has last sync happened")
     args = parser.parse_args()
     return args
 
@@ -60,6 +65,23 @@ def paivita_(polut):
         return
 
 
+def print_sync_time_(polut):
+    if len(polut) == 0:
+        path = os.getcwd()
+    elif len(polut) == 1:
+        path = polut[0]
+    else:
+        print("Too many paths given for get-time!")
+        return
+
+    try:
+        note = backup.Note(os.path.join(path, backup.lockFilename), False)
+        time = datetime.datetime.strptime(note.dateString, backup.dateFormat)
+        print(time.isoformat())
+    except RuntimeError as e:
+        print(e)
+
+
 def main():
     args = lue_argumentit()
 
@@ -74,6 +96,8 @@ def main():
         return tulosta_versio(args.kohde)
     elif Toiminto.PAIVITA in args.toiminto:
         return paivita_(args.kohde)
+    elif Toiminto.PRINT_TIME in args.toiminto:
+        return print_sync_time_(args.kohde)
     else:
         raise RuntimeError("Tuntematon toiminto = {}".format(args.toiminto[0]))
 
