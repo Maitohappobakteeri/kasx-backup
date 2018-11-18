@@ -10,4 +10,5 @@ add-color ()
 
 cd src
 python -m unittest discover --pattern "*_test.py" 2>&1 > /dev/null |
-    sed -r 's/^(FAIL.*)/'"$(add-color 1 '\1')"'/'
+    sed -r 's/^(FAIL.*)/'"$(add-color 1 '\1')"'/' |
+    sed -r 's/^(ERROR.*)/'"$(add-color 1 '\1')"'/'
