@@ -90,9 +90,9 @@ class Config:
                     self.oneCopyList.append((path, path))
 
     def tarkista_tiedostot(self):
-        for kohde in itertools.chain(self.fullCopyList, self.oneCopyList):
-            if not os.path.exists(kohde):
-                print("Kohde {} ei ole olemassa".format(kohde))
+        for localPath, _ in itertools.chain(self.fullCopyList, self.oneCopyList):
+            if not os.path.exists(localPath):
+                print("{} doesn't exist".format(localPath))
                 return False
         return True
 
