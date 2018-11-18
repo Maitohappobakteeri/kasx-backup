@@ -19,12 +19,19 @@ class ConfigTest(unittest.TestCase):
             conf = Config(self.environment, f.read())
 
         self.assertEqual(
-            {"somefile", "anotherone/withDeep/"},
+            {
+                ("somefile", "somefile"),
+                ("anotherone/withDeep/", "anotherone/withDeep/")
+            },
             set(conf.fullCopyList)
         )
 
         self.assertEqual(
-            {"Documents", "Music", "projects"},
+            {
+                ("Documents", "Documents"),
+                ("Music", "Music"),
+                ("projects", "projects")
+            },
             set(conf.oneCopyList)
         )
 
@@ -33,14 +40,30 @@ class ConfigTest(unittest.TestCase):
             conf = Config(self.environment, f.read())
 
         self.assertEqual(
-            {"somefile", "anotherone", "/big/whoop/magazine/0.mp3", "skripti"},
+            {
+                ("somefile", "somefile"),
+                ("anotherone", "anotherone"),
+                ("/big/whoop/magazine/0.mp3", "a/0.mp3"),
+                ("skripti", "xxx")
+            },
             set(conf.fullCopyList)
         )
 
         self.assertEqual(
-            {"Documents", "Music", "projects", "cell.txt"},
+            {
+                ("Documents", "Documents"),
+                ("Music", "Music"),
+                ("projects", "projects"),
+                ("cell.txt", "megacell")
+            },
             set(conf.oneCopyList)
         )
+
+    def test_config_abs_not_allowed_without_backup_name(self):
+        def openConfig():
+            with open(os.path.join(dir_, "test5.config")) as f:
+                Config(self.environment, f.read())
+        self.assertRaises(RuntimeError, openConfig)
 
 
 if __name__ == '__main__':

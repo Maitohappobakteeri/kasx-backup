@@ -16,8 +16,8 @@ class Vaihtoehto:
 
 
 class Valinta:
-    def __init__(self, nimi):
-        self.nimi = nimi
+    def __init__(self, backupPath):
+        self.backupPath = backupPath
         self.vaihtoehdot = []
 
     def lisaa_vaihtoehto(self, vaihtoehto):
@@ -33,4 +33,4 @@ class Valinta:
                 else:
                     choice = None
 
-        return choice
+        return (choice, self.backupPath) if choice else None

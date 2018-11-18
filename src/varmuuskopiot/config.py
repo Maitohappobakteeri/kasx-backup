@@ -81,9 +81,9 @@ class Config:
                     raise RuntimeError()
 
                 if valittuLista == Lista.AINA_UUSI:
-                    self.fullCopyList.append(path)
+                    self.fullCopyList.append((path, path))
                 elif valittuLista == Lista.VAIN_YKSI:
-                    self.oneCopyList.append(path)
+                    self.oneCopyList.append((path, path))
 
     def tarkista_tiedostot(self):
         for kohde in itertools.chain(self.fullCopyList, self.oneCopyList):
