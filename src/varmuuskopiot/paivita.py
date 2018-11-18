@@ -136,14 +136,10 @@ def paivita_2_19_to_3_0_(hakemisto):
                 and siivottuRivi[0] == "!" \
                 and siivottuRivi[1:].split()[0].lower() == "valinta":
             isOption = True
-            print("isOption")
         elif isOption:
-            print("HERE")
             if siivottuRivi and siivottuRivi[0] == "|":
-                print("write")
                 rivit[i] = "| enable " + siivottuRivi[1:].strip()
             else:
-                print("nope")
                 isOption = False
 
     with open(os.path.join(hakemisto, config.configFilename), "w") as f:
@@ -151,6 +147,11 @@ def paivita_2_19_to_3_0_(hakemisto):
             print(rivi, file=f)
 
     return True
+
+
+@Paivitys((3, 0), (3, 1))
+def paivita_3_0_to_3_1_(hakemisto):
+    return tyhja_paivitys_2_1_(hakemisto, (3, 1))
 
 
 def tyhja_paivitys_2_1_(hakemisto, uusiVersio):
