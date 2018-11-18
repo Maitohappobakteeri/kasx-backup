@@ -44,9 +44,9 @@ class CommandTest(unittest.TestCase):
         )
 
         with open(os.path.join(dir_, "test3-backup.txt")) as f:
-            expectedCommands = [line.rstrip() for line in f.readlines()]
+            expectedCommands = f.read().rstrip()
 
-        self.assertEqual(expectedCommands, commands)
+        self.assertEqual(expectedCommands, "\n".join(commands))
 
     def test_backup_commands_with_absolute_paths(self):
         with open(os.path.join(dir_, "test4.config")) as f:

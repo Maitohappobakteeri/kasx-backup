@@ -2,8 +2,10 @@
 
 from varmuuskopiot.backup import dateFormat as dateFormat
 
+import os
 
-rsyncKomento = "rsync -R -a --delete --progress -o -g --omit-dir-times"
+
+rsyncKomento = "rsync -a --delete --progress -o -g --omit-dir-times"
 
 
 def rsync_komento(lahde, kohde, testiSuoritus):
@@ -19,17 +21,30 @@ def create_backup_commands(environment, config, local, backup, dryRun):
     commands = []
 
     if config.fullCopyList:
-        fullCopyDir = fullCopyKohde.format(
+        fullCopyDir = os.path.normpath(fullCopyKohde.format(
             backup.path(), environment.date.strftime(dateFormat)
-        )
+        ))
         commands.append("mkdir -p {}".format(fullCopyDir))
 
     for path in config.fullCopyList:
-        commands.append(rsync_komento(path, fullCopyDir, dryRun))
+        localPath = os.path.normpath(path[0])
+        backupPath = os.path.normpath(os.path.join(fullCopyDir, path[1]))
+        backupPathDirName = os.path.dirname(backupPath)
+        if not backupPathDirName == fullCopyDir:
+            commands.append("mkdir -p {}".format(backupPathDirName))
+        commands.append(rsync_komento(localPath, backupPath, dryRun))
+
+    if config.oneCopyList:
+        oneCopyDir = os.path.normpath(oneCopyKohde.format(backup.path()))
+        commands.append("mkdir -p {}".format(oneCopyDir))
 
     for path in config.oneCopyList:
-        kohde = oneCopyKohde.format(backup.path())
-        commands.append(rsync_komento(path, kohde, dryRun))
+        localPath = os.path.normpath(path[0])
+        backupPath = os.path.normpath(os.path.join(oneCopyDir, path[1]))
+        backupPathDirName = os.path.dirname(backupPath)
+        if not backupPathDirName == oneCopyDir:
+            commands.append("mkdir -p {}".format(backupPathDirName))
+        commands.append(rsync_komento(localPath, backupPath, dryRun))
 
     return commands
 
