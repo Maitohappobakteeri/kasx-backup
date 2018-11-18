@@ -1,13 +1,18 @@
 
 
 class Vaihtoehto:
-    def __init__(self, ehto, kohdepolku):
+    def __init__(self, enable, ehto, kohdepolku):
         self.kohdepolku = kohdepolku
         self.ehto = ehto
+        self.enable = enable
 
     @staticmethod
-    def luo_hostname_ehto(hostname, kohdepolku):
-        return Vaihtoehto((lambda env: env.hostname == hostname), kohdepolku)
+    def hostname_option(enable, hostname, path):
+        return Vaihtoehto(enable, (lambda env: env.hostname == hostname), path)
+
+    @staticmethod
+    def default_option(path):
+        return Vaihtoehto(True, (lambda env: True), path)
 
 
 class Valinta:
@@ -19,9 +24,13 @@ class Valinta:
         self.vaihtoehdot.append(vaihtoehto)
 
     def valitse(self, environment):
-        matches = (
-            v.kohdepolku
-            for v in self.vaihtoehdot
-            if v.ehto(environment)
-        )
-        return next(matches, None)
+        choice = None
+
+        for option in self.vaihtoehdot:
+            if option.ehto(environment):
+                if option.enable and not choice:
+                    choice = option.kohdepolku
+                else:
+                    choice = None
+
+        return choice

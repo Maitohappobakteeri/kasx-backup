@@ -23,6 +23,7 @@ class MockBackup:
 
 class CommandTest(unittest.TestCase):
     def setUp(self):
+        self.maxDiff = None
         self.environment = Environment()
         self.environment.hostname = "machineB"
         self.environment.date = datetime.datetime.strptime(

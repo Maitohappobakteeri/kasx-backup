@@ -93,15 +93,35 @@ class Config:
         return True
 
 
+def create_option(enable, *args):
+    if enable:
+        conditionType, condition, path = args
+    else:
+        conditionType, condition = args
+        path = None
+
+    if not conditionType == "hostname":
+        raise RuntimeError("unknown condition type", conditionType)
+
+    return Vaihtoehto.hostname_option(enable, condition, path)
+
+
 def lue_vaihtoehdot(rivit):
-    vaihtoehdot = []
-    while not len(rivit.peek().lstrip()) == 0 and rivit.peek().lstrip()[0] == "|":
-        rivi = next(rivit)
-        _, tyyppi, ehto, polku = rivi.split()
-        if not tyyppi == "hostname":
-            raise RuntimeError("tuntematon tyyppi ", tyyppi)
-        vaihtoehdot.append(Vaihtoehto.luo_hostname_ehto(ehto, polku))
-    return vaihtoehdot
+    actions = []
+
+    while not len(rivit.peek().lstrip()) == 0 \
+            and rivit.peek().lstrip()[0] == "|":
+        rivi = next(rivit).rstrip()[1:]
+        action, *tail = rivi.split()
+
+        if action == "default":
+            actions.append(Vaihtoehto.default_option(tail[0]))
+        elif action in ["enable", "disable"]:
+            actions.append(create_option(action == "enable", *tail))
+        else:
+            raise RuntimeError("unkown action for option", action)
+
+    return actions
 
 
 if __name__ == "__main__":
