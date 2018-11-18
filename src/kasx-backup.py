@@ -6,7 +6,6 @@ from varmuuskopiot import backup, config
 import komento
 
 import os
-import datetime
 import argparse
 
 
@@ -59,27 +58,18 @@ def main():
 
     print("konfiguraatio tiedosto luettu onnistuneesti")
 
-    fullCopyKohde = "{0}/full-copy/{1}/"
-    oneCopyKohde = "{0}/one-copy/"
+    commands = komento.create_backup_commands(
+        environment,
+        conf,
+        local,
+        backp,
+        dryRun
+    )
 
-    if conf.fullCopyList:
-        os.makedirs(fullCopyKohde.format(backupLocation, dateString))
-
-    for path in conf.fullCopyList:
-        kohde = fullCopyKohde.format(backupLocation, dateString)
-        komentoStr = komento.rsync_komento(path, kohde, dryRun)
-
-        print(komentoStr)
+    for command in commands:
+        print(command)
         if not onlyTest:
-            os.system(komentoStr)
-
-    for path in conf.oneCopyList:
-        kohde = oneCopyKohde.format(backupLocation)
-        komentoStr = komento.rsync_komento(path, kohde, dryRun)
-
-        print(komentoStr)
-        if not onlyTest:
-            os.system(komentoStr)
+            os.system(command)
 
     if not onlyTest and not dryRun:
         backup.write_note(os.path.join(backupLocation, backup.lockFilename),
