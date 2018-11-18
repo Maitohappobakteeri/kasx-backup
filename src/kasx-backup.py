@@ -23,8 +23,8 @@ def lue_argumentit():
 
 
 def main():
-    currentTime = datetime.datetime.today()
-    dateString = currentTime.strftime(backup.dateFormat)
+    environment = Environment.current_environment()
+    dateString = environment.date.strftime(backup.dateFormat)
 
     args = lue_argumentit()
     onlyTest = args.testi
@@ -51,7 +51,6 @@ def main():
     print("kopioidaan konfiguraatio tiedosto")
     local.kopioi_konfiguraatio(backp)
 
-    environment = Environment.current_environment()
     with open(config.configFilename, "r") as f:
         conf = config.Config(environment, f.read())
 

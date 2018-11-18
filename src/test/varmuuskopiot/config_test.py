@@ -18,7 +18,10 @@ class ConfigTest(unittest.TestCase):
         with open(os.path.join(dir_, "test1.config")) as f:
             conf = Config(self.environment, f.read())
 
-        self.assertEqual({"somefile", "anotherone"}, set(conf.fullCopyList))
+        self.assertEqual(
+            {"somefile", "anotherone/withDeep/"},
+            set(conf.fullCopyList)
+        )
 
         self.assertEqual(
             {"Documents", "Music", "projects"},
