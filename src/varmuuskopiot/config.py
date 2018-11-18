@@ -44,9 +44,9 @@ class Config:
             elif line[0] == commandCharacter:
                 komento, *argumentit = line[1:].rstrip() \
                                   .lstrip() \
-                                  .lower() \
                                   .replace("\t", " ") \
                                   .split()
+                komento = komento.lower()
                 if(komento not in (fullCopyCommand, oneCopyCommand, vaihtoehtoisetToiminto)):
                     print("invalid command: {}".format(komento))
                     raise RuntimeError()

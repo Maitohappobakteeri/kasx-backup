@@ -2,7 +2,7 @@ rsync -a --delete --progress -o -g --omit-dir-times /mnt/somedev/kasx/full-copy/
 mkdir -p anotherone
 rsync -a --delete --progress -o -g --omit-dir-times /mnt/somedev/kasx/full-copy/2011_11_12_21_20_00/anotherone/withDeep anotherone/withDeep
 mkdir -p /coffee
-rsync -a --delete --progress -o -g --omit-dir-times /mnt/somedev/kasx/one-copy/coffeerepo /coffee/repo
+rsync -a --delete --progress -o -g --omit-dir-times /mnt/somedev/kasx/one-copy/coffeeREPO /coffee/repo
 rsync -a --delete --progress -o -g --omit-dir-times /mnt/somedev/kasx/one-copy/Music Music
 rsync -a --delete --progress -o -g --omit-dir-times /mnt/somedev/kasx/one-copy/Documents Documents
 rsync -a --delete --progress -o -g --omit-dir-times /mnt/somedev/kasx/one-copy/projects projects
