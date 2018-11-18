@@ -80,6 +80,10 @@ class Config:
                     print("saatiin polku ennen valittua listaa:", path)
                     raise RuntimeError()
 
+                if os.path.isabs(path):
+                    print("absolute path without explicit backup path")
+                    raise RuntimeError("absolute path without explicit backup path")
+
                 if valittuLista == Lista.AINA_UUSI:
                     self.fullCopyList.append((path, path))
                 elif valittuLista == Lista.VAIN_YKSI:
