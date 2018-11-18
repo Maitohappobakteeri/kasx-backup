@@ -1,6 +1,0 @@
-rsync -R -a --delete --progress -o -g --omit-dir-times /mnt/somedev/kasx//full-copy/2011_11_12_21_20_00/./somefile ./
-rsync -R -a --delete --progress -o -g --omit-dir-times /mnt/somedev/kasx//full-copy/2011_11_12_21_20_00/./anotherone/withDeep/ ./
-rsync -R -a --delete --progress -o -g --omit-dir-times /mnt/somedev/kasx//one-copy/./Music ./
-rsync -R -a --delete --progress -o -g --omit-dir-times /mnt/somedev/kasx//one-copy/./Documents ./
-rsync -R -a --delete --progress -o -g --omit-dir-times /mnt/somedev/kasx//one-copy/./projects ./
-rsync -R -a --delete --progress -o -g --omit-dir-times /mnt/somedev/kasx//one-copy/./deep/deeper/deepest//file.deep ./

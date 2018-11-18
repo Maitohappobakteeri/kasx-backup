@@ -50,21 +50,32 @@ def create_backup_commands(environment, config, local, backup, dryRun):
 
 
 def create_sync_commands(environment, config, local, backup, dateString, dryRun):
-    fullCopyLahde = "{1}/full-copy/{2}/./{0}"
-    oneCopyLahde = "{1}/one-copy/./{0}"
+    fullCopyLahde = "{0}/full-copy/{1}/"
+    oneCopyLahde = "{0}/one-copy/"
 
     commands = []
 
+    # TODO: Convert date to dateString here?
+    fullCopyDir = os.path.normpath(fullCopyLahde.format(
+        backup.path(), dateString
+    ))
+
     for path in config.fullCopyList:
-        lahde = fullCopyLahde.format(
-            path,
-            backup.path(),
-            dateString
-        )
-        commands.append(rsync_komento(lahde, "./", dryRun))
+        localPath = os.path.normpath(path[0])
+        backupPath = os.path.normpath(os.path.join(fullCopyDir, path[1]))
+        localPathDirName = os.path.dirname(localPath)
+        if localPathDirName:
+            commands.append("mkdir -p {}".format(localPathDirName))
+        commands.append(rsync_komento(backupPath, localPath, dryRun))
+
+    oneCopyDir = os.path.normpath(oneCopyLahde.format(backup.path()))
 
     for path in config.oneCopyList:
-        lahde = oneCopyLahde.format(path, backup.path())
-        commands.append(rsync_komento(lahde, "./", dryRun))
+        localPath = os.path.normpath(path[0])
+        backupPath = os.path.normpath(os.path.join(oneCopyDir, path[1]))
+        localPathDirName = os.path.dirname(localPath)
+        if localPathDirName:
+            commands.append("mkdir -p {}".format(localPathDirName))
+        commands.append(rsync_komento(backupPath, localPath, dryRun))
 
     return commands
