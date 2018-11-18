@@ -123,6 +123,36 @@ def paivita_2_9_to_2_10_(hakemisto):
     return tyhja_paivitys_2_1_(hakemisto, (2, 10))
 
 
+@Paivitys((2, 10), (3, 0))
+def paivita_2_19_to_3_0_(hakemisto):
+    print("Korjataan konfiguraatiokomentojen muoto")
+    with open(os.path.join(hakemisto, config.configFilename), "r") as f:
+        rivit = [r.rstrip() for r in f.readlines()]
+
+    isOption = False
+    for i, rivi in enumerate(rivit):
+        siivottuRivi = rivi.strip()
+        if not len(siivottuRivi) == 0 \
+                and siivottuRivi[0] == "!" \
+                and siivottuRivi[1:].split()[0].lower() == "valinta":
+            isOption = True
+            print("isOption")
+        elif isOption:
+            print("HERE")
+            if siivottuRivi and siivottuRivi[0] == "|":
+                print("write")
+                rivit[i] = "| enable " + siivottuRivi[1:].strip()
+            else:
+                print("nope")
+                isOption = False
+
+    with open(os.path.join(hakemisto, config.configFilename), "w") as f:
+        for rivi in rivit:
+            print(rivi, file=f)
+
+    return True
+
+
 def tyhja_paivitys_2_1_(hakemisto, uusiVersio):
     print("Ei muutoksia, nostetaan vain versiota")
     return True
@@ -140,4 +170,4 @@ def nosta_versio_(hakemisto, uusiVersio):
 
 if __name__ == "__main__":
     print("Testi",
-          "onnistui" if paivita(os.getcwd(), (2, 2)) else "epäonnistui")
+          "onnistui" if paivita(os.getcwd(), (3, 0)) else "epäonnistui")
