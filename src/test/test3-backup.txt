@@ -1,10 +1,10 @@
 mkdir -p /mnt/somedev/kasx/full-copy/2011_11_12_21_20_00
 rsync -a --delete --progress -o -g --omit-dir-times somefile /mnt/somedev/kasx/full-copy/2011_11_12_21_20_00/somefile
 mkdir -p /mnt/somedev/kasx/full-copy/2011_11_12_21_20_00/anotherone
-rsync -a --delete --progress -o -g --omit-dir-times anotherone/withDeep /mnt/somedev/kasx/full-copy/2011_11_12_21_20_00/anotherone/withDeep
+rsync -a --delete --progress -o -g --omit-dir-times anotherone/withDeep/ /mnt/somedev/kasx/full-copy/2011_11_12_21_20_00/anotherone/withDeep
 mkdir -p /mnt/somedev/kasx/one-copy
-rsync -a --delete --progress -o -g --omit-dir-times /coffee/repo /mnt/somedev/kasx/one-copy/coffeeREPO
-rsync -a --delete --progress -o -g --omit-dir-times Music /mnt/somedev/kasx/one-copy/Music
-rsync -a --delete --progress -o -g --omit-dir-times Documents /mnt/somedev/kasx/one-copy/Documents
-rsync -a --delete --progress -o -g --omit-dir-times projects /mnt/somedev/kasx/one-copy/projects
+rsync -a --delete --progress -o -g --omit-dir-times /coffee/repo/ /mnt/somedev/kasx/one-copy/coffeeREPO
+rsync -a --delete --progress -o -g --omit-dir-times Music/ /mnt/somedev/kasx/one-copy/Music
+rsync -a --delete --progress -o -g --omit-dir-times Documents/ /mnt/somedev/kasx/one-copy/Documents
+rsync -a --delete --progress -o -g --omit-dir-times projects/ /mnt/somedev/kasx/one-copy/projects
 rsync -a --delete --progress -o -g --omit-dir-times deep/deeper/deepest/file.deep /mnt/somedev/kasx/one-copy/xxx

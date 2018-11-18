@@ -20,17 +20,17 @@ class ConfigTest(unittest.TestCase):
 
         self.assertEqual(
             {
-                ("somefile", "somefile"),
-                ("anotherone/withDeep/", "anotherone/withDeep/")
+                ("somefile", "somefile", False),
+                ("anotherone/withDeep/", "anotherone/withDeep/", True)
             },
             set(conf.fullCopyList)
         )
 
         self.assertEqual(
             {
-                ("Documents", "Documents"),
-                ("Music", "Music"),
-                ("projects", "projects")
+                ("Documents", "Documents", False),
+                ("Music", "Music", False),
+                ("projects", "projects", False)
             },
             set(conf.oneCopyList)
         )
@@ -41,20 +41,20 @@ class ConfigTest(unittest.TestCase):
 
         self.assertEqual(
             {
-                ("somefile", "somefile"),
-                ("anotherone", "anotherone"),
-                ("/big/whoop/magazine/0.mp3", "a/0.mp3"),
-                ("skripti", "xxx")
+                ("somefile", "somefile", False),
+                ("anotherone", "anotherone", False),
+                ("/big/whoop/magazine/0.mp3", "a/0.mp3", False),
+                ("skripti", "xxx", False)
             },
             set(conf.fullCopyList)
         )
 
         self.assertEqual(
             {
-                ("Documents", "Documents"),
-                ("Music", "Music"),
-                ("projects", "projects"),
-                ("cell.txt", "megacell")
+                ("Documents", "Documents", False),
+                ("Music", "Music", False),
+                ("projects", "projects", False),
+                ("cell.txt", "megacell", False)
             },
             set(conf.oneCopyList)
         )

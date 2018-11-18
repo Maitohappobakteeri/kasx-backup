@@ -27,7 +27,10 @@ def create_backup_commands(environment, config, local, backup, dryRun):
         commands.append("mkdir -p {}".format(fullCopyDir))
 
     for path in config.fullCopyList:
-        localPath = os.path.normpath(path[0])
+        localPath = os.path.normpath(path[0]) \
+            if not path[0][-1] == "/" \
+            else os.path.normpath(path[0]) + "/"
+
         backupPath = os.path.normpath(os.path.join(fullCopyDir, path[1]))
         backupPathDirName = os.path.dirname(backupPath)
         if not backupPathDirName == fullCopyDir:
@@ -39,7 +42,10 @@ def create_backup_commands(environment, config, local, backup, dryRun):
         commands.append("mkdir -p {}".format(oneCopyDir))
 
     for path in config.oneCopyList:
-        localPath = os.path.normpath(path[0])
+        localPath = os.path.normpath(path[0]) \
+            if not path[0][-1] == "/" \
+            else os.path.normpath(path[0]) + "/"
+
         backupPath = os.path.normpath(os.path.join(oneCopyDir, path[1]))
         backupPathDirName = os.path.dirname(backupPath)
         if not backupPathDirName == oneCopyDir:
@@ -62,7 +68,12 @@ def create_sync_commands(environment, config, local, backup, dateString, dryRun)
 
     for path in config.fullCopyList:
         localPath = os.path.normpath(path[0])
+
         backupPath = os.path.normpath(os.path.join(fullCopyDir, path[1]))
+        backupPath = backupPath \
+            if not path[0][-1] == "/" \
+            else backupPath + "/"
+
         localPathDirName = os.path.dirname(localPath)
         if localPathDirName:
             commands.append("mkdir -p {}".format(localPathDirName))
@@ -72,7 +83,12 @@ def create_sync_commands(environment, config, local, backup, dateString, dryRun)
 
     for path in config.oneCopyList:
         localPath = os.path.normpath(path[0])
+
         backupPath = os.path.normpath(os.path.join(oneCopyDir, path[1]))
+        backupPath = backupPath \
+            if not path[0][-1] == "/" \
+            else backupPath + "/"
+
         localPathDirName = os.path.dirname(localPath)
         if localPathDirName:
             commands.append("mkdir -p {}".format(localPathDirName))

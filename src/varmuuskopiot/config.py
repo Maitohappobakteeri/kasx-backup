@@ -60,8 +60,9 @@ class Config:
                     valinta = Valinta(argumentit[0])
                     for vaihtoehto in lue_vaihtoehdot(rivit):
                         valinta.lisaa_vaihtoehto(vaihtoehto)
-                    kohdepolku = valinta.valitse(environment)
-                    if kohdepolku is not None:
+                    valittu = valinta.valitse(environment)
+                    if valittu is not None:
+                        kohdepolku = (*valittu, valittu[0][-1] == "/")
                         if valittuLista is None:
                             print("saatiin polku ennen valittua listaa:", kohdepolku)
                             raise RuntimeError()
@@ -85,12 +86,12 @@ class Config:
                     raise RuntimeError("absolute path without explicit backup path")
 
                 if valittuLista == Lista.AINA_UUSI:
-                    self.fullCopyList.append((path, path))
+                    self.fullCopyList.append((path, path, path[-1] == "/"))
                 elif valittuLista == Lista.VAIN_YKSI:
-                    self.oneCopyList.append((path, path))
+                    self.oneCopyList.append((path, path, path[-1] == "/"))
 
     def tarkista_tiedostot(self):
-        for localPath, _ in itertools.chain(self.fullCopyList, self.oneCopyList):
+        for localPath, *_ in itertools.chain(self.fullCopyList, self.oneCopyList):
             if not os.path.exists(localPath):
                 print("{} doesn't exist".format(localPath))
                 return False
