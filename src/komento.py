@@ -34,7 +34,7 @@ def create_backup_commands(environment, config, local, backup, dryRun):
     return commands
 
 
-def create_sync_commands(environment, config, local, backup, dryRun):
+def create_sync_commands(environment, config, local, backup, dateString, dryRun):
     fullCopyLahde = "{1}/full-copy/{2}/./{0}"
     oneCopyLahde = "{1}/one-copy/./{0}"
 
@@ -44,7 +44,7 @@ def create_sync_commands(environment, config, local, backup, dryRun):
         lahde = fullCopyLahde.format(
             path,
             backup.path(),
-            environment.date.strftime(dateFormat)
+            dateString
         )
         commands.append(rsync_komento(lahde, "./", dryRun))
 

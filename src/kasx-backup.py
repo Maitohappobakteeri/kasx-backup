@@ -47,14 +47,14 @@ def main():
         print("{} ei ole olemassa".format(config.configFilename))
         return
 
-    print("kopioidaan konfiguraatio tiedosto")
-    local.kopioi_konfiguraatio(backp)
-
-    with open(config.configFilename, "r") as f:
-        conf = config.Config(environment, f.read())
+    conf = local.read_config(environment)
 
     if not conf.tarkista_tiedostot():
         return
+
+    if not onlyTest and not dryRun:
+        print("kopioidaan konfiguraatio tiedosto")
+        local.kopioi_konfiguraatio(backp)
 
     print("konfiguraatio tiedosto luettu onnistuneesti")
 

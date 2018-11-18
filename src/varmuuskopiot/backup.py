@@ -112,6 +112,10 @@ class DataSource_:
     def kopioi_konfiguraatio(self, kohde):
         kopioi_konfiguraatio(self.path(), kohde.path())
 
+    def read_config(self, environment):
+        with open(os.path.join(self.path(), config.configFilename), "r") as f:
+            return config.Config(environment, f.read())
+
 
 class Local(DataSource_):
     def __init__(self, path):

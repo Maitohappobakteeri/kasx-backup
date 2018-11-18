@@ -2,6 +2,7 @@
 from varmuuskopiot.environment import Environment
 from varmuuskopiot.config import Config
 from varmuuskopiot.backup import dateFormat as dateFormat
+from varmuuskopiot import backup
 import komento as command
 
 import unittest
@@ -55,6 +56,7 @@ class CommandTest(unittest.TestCase):
             conf,
             MockBackup("/home/someone"),
             MockBackup("/mnt/somedev/kasx/"),
+            self.environment.date.strftime(backup.dateFormat),
             False
         )
 

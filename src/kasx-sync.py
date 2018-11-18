@@ -2,7 +2,7 @@
 
 
 from varmuuskopiot.environment import Environment
-from varmuuskopiot import backup, config
+from varmuuskopiot import backup
 import komento
 
 import os
@@ -22,7 +22,7 @@ def lue_argumentit():
 
 
 def main():
-    dateString = None
+    environment = Environment.current_environment()
 
     args = lue_argumentit()
     onlyTest = args.testi
@@ -43,21 +43,21 @@ def main():
     if not local.can_sync_from(backp):
         return
 
-    print("kopioidaan konfiguraatio tiedosto")
-    backp.kopioi_konfiguraatio(local)
+    conf = backp.read_config(environment)
+    print("konfiguraatio tiedosto luettu onnistuneesti")
+
+    if not onlyTest and not dryRun:
+        print("kopioidaan konfiguraatio tiedosto")
+        backp.kopioi_konfiguraatio(local)
 
     dateString = backp.date_string()
-
-    environment = Environment.current_environment()
-    with open(config.configFilename, "r") as f:
-        conf = config.Config(environment, f.read())
-    print("konfiguraatio tiedosto luettu onnistuneesti")
 
     commands = komento.create_sync_commands(
         environment,
         conf,
         local,
         backp,
+        dateString,
         dryRun
     )
 
@@ -67,7 +67,6 @@ def main():
             os.system(command)
 
     if not onlyTest and not dryRun:
-        # TODO: Backup kirjoittaa oman notensa
         backup.write_note(backup.lockFilename, dateString)
         print("paikallinen kasx muokkausaikatiedosto päivitettiin")
 
