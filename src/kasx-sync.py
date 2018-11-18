@@ -53,24 +53,18 @@ def main():
         conf = config.Config(environment, f.read())
     print("konfiguraatio tiedosto luettu onnistuneesti")
 
-    fullCopyLahde = "{1}/full-copy/{2}/./{0}"
-    oneCopyLahde = "{1}/one-copy/./{0}"
+    commands = komento.create_sync_commands(
+        environment,
+        conf,
+        local,
+        backp,
+        dryRun
+    )
 
-    for path in conf.fullCopyList:
-        lahde = fullCopyLahde.format(path, backupLocation, dateString)
-        komentoStr = komento.rsync_komento(lahde, "./", dryRun)
-
-        print(komentoStr)
+    for command in commands:
+        print(command)
         if not onlyTest:
-            os.system(komentoStr)
-
-    for path in conf.oneCopyList:
-        lahde = oneCopyLahde.format(path, backupLocation)
-        komentoStr = komento.rsync_komento(lahde, "./", dryRun)
-
-        print(komentoStr)
-        if not onlyTest:
-            os.system(komentoStr)
+            os.system(command)
 
     if not onlyTest and not dryRun:
         # TODO: Backup kirjoittaa oman notensa

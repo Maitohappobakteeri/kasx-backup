@@ -46,6 +46,23 @@ class CommandTest(unittest.TestCase):
 
         self.assertEqual(expectedCommands, commands)
 
+    def test_sync_commands(self):
+        with open(os.path.join(dir_, "test3.config")) as f:
+            conf = Config(self.environment, f.read())
+
+        commands = command.create_sync_commands(
+            self.environment,
+            conf,
+            MockBackup("/home/someone"),
+            MockBackup("/mnt/somedev/kasx/"),
+            False
+        )
+
+        with open(os.path.join(dir_, "test3-sync.txt")) as f:
+            expectedCommands = [line.rstrip() for line in f.readlines()]
+
+        self.assertEqual(expectedCommands, commands)
+
 
 if __name__ == '__main__':
     unittest.main()
