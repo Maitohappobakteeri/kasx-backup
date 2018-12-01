@@ -17,6 +17,8 @@ def lue_argumentit():
                         help="testaa toimintaa, vain tulosta komennot")
     parser.add_argument("-f", "--vain-tiedostot", action="store_true",
                         help="aja rsync -n asetuksella")
+    parser.add_argument("--allow-resync", action="store_true",
+                        help="allow syncing if timestamps are equal")
     args = parser.parse_args()
     return args
 
@@ -28,6 +30,7 @@ def main():
     onlyTest = args.testi
     dryRun = args.vain_tiedostot
     backupLocation = args.kohde
+    allowResync = args.allow_resync
 
     if(not backupLocation[0] == "/"):
         print("varmuuskopion polun pitää alkaa /")
@@ -40,7 +43,7 @@ def main():
     except RuntimeError:
         return
 
-    if not local.can_sync_from(backp):
+    if not local.can_sync_from(backp, allowResync=allowResync):
         return
 
     conf = backp.read_config(environment)

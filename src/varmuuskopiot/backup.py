@@ -121,28 +121,32 @@ class Local(DataSource_):
     def __init__(self, path):
         super().__init__(path, True)
 
-    def can_sync_from(self, backup):
+    def can_sync_from(self, backup, *, allowResync=False):
         if self.note_ is not None and self.is_same(backup):
             print("virheellinen kohde: sama polku")
             return False
-        elif not backup.is_backup():
+
+        if not backup.is_backup():
             print("kohde ei ole varmuuskopio")
             return False
-        elif not backup.can_sync():
+
+        if not backup.can_sync():
             print("kohteeseen ei ole luotu vielä kopiota")
             return False
-        elif self.note_ is not None and backup.timestamp() <= self.timestamp():
+
+        if self.note_ is not None:
             if backup.timestamp() < self.timestamp():
                 print("paikallinen kasx muokkausaikatiedosto on uudempi")
-            elif backup.timestamp() == self.timestamp():
+                return False
+            elif backup.timestamp() == self.timestamp() and not allowResync:
                 print("kasx muokkausaikatiedostojen aika on sama")
+                return False
 
-            if not backup.can_sync():
-                print("kohteeseen ei ole luotu vielä kopiota")
-
+        if not backup.can_sync():
+            print("kohteeseen ei ole luotu vielä kopiota")
             return False
-        else:
-            return True
+
+        return True
 
     def can_backup_into(self, backup):
         if self.is_same(backup):
